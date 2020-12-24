@@ -6,7 +6,7 @@ pull_pb_group: 'root'
 pull_pb_mode: '0755'
 pull_only_if_changed: true
 pull_pb_path: "/playbooks/{{ pull_pb_name }}"
-pull_pb_seed: "{{ [ansible_nodename, ansible_default_ipv4.macaddress, pull_pb_repo, pull_pb_branch].join(',') }}"
+pull_pb_seed: "{{ [ansible_nodename, ansible_default_ipv4.macaddress, pull_pb_repo, pull_pb_branch]|join(',') }}"
 pull_pb_cron: "{{59|random(seed=pull_pb_seed)}} {{23|random(seed=pull_pb_seed)}} * * *" 
 pull_pb_logfile: "/var/log/pb/{{ pull_pb_name }}.log"
 pull_pb_lock: "ansible-pb"
