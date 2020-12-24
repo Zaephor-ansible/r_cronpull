@@ -1,2 +1,41 @@
 ---
 # tasks file for r_cronpull
+- name: Ensure retention folder exists
+  file:
+    path: "{{ pull_pb_path }}"
+    state: directory
+    owner: "{{ pull_pb_owner }}"
+    group: "{{ pull_pb_group }}"
+    mode: "{{ pull_pb_mode }}"
+
+- name: Add to cron
+  lineinfile:
+    path: "/etc/cron.d/{{ pull_pb_lock }}"
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+    regexp: "^.*--checkout={{ pull_pb_branch }} --url={{ pull_pb_repo }}.*$"
+    line: >-
+      {{ pull_pb_cron }} {{ pull_pb_owner }} /usr/bin/flock
+      -n /tmp/{{ pull_pb_lock }}.lock
+      /usr/local/bin/ansible-pull -i localhost
+      --checkout={{ pull_pb_branch }}
+      --url={{ pull_pb_repo }}
+      --directory={{ pull_pb_path }}
+      --accept-host-key
+      --clean
+      {% if pull_only_if_changed %}
+      --only-if-changed
+      {% endif %}
+      {% if pull_pb_deploykey | default(false) %}
+      --private-key={{ pull_pb_deploykey }}
+      {% endif %}
+      >> {{ pull_pb_logfile }}
+
+- name: Add to logrotate
+  template:
+    src: templates/etc_logrotate.d_cronpull.j2
+    dest: "/etc/logrotate.d/{{ pull_pb_name }}"
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
