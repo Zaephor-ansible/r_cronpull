@@ -14,6 +14,7 @@
     owner: 'root'
     group: 'root'
     mode: '0644'
+    create: 'yes'
     regexp: "^.*--checkout={{ pull_pb_branch }} --url={{ pull_pb_repo }}.*$"
     line: >-
       {{ pull_pb_cron }} {{ pull_pb_owner }} /usr/bin/flock
