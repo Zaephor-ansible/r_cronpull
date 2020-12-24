@@ -2,11 +2,14 @@
 # tasks file for r_cronpull
 - name: Ensure retention folder exists
   file:
-    path: "{{ pull_pb_path }}"
+    path: "{{ item.path }}"
     state: directory
-    owner: "{{ pull_pb_owner }}"
-    group: "{{ pull_pb_group }}"
-    mode: "{{ pull_pb_mode }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+    mode: "{{ item.mode }}"
+  with_items:
+  - { path: "{{ pull_pb_path }}", owner: "{{ pull_pb_owner }}", group: "{{ pull_pb_group }}", mode: "{{ pull_pb_mode }}" }
+  - { path: "{{ pull_pb_logfile|dirname }}", owner: 'root', group: 'root', mode: '0755' }
 
 - name: Add to cron
   lineinfile:
