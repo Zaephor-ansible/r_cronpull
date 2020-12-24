@@ -21,7 +21,8 @@
     regexp: "^.*--checkout={{ pull_pb_branch }} --url={{ pull_pb_repo }}.*$"
     line: >-
       {{ pull_pb_cron }} {{ pull_pb_owner }} /usr/bin/flock
-      -n /tmp/{{ pull_pb_lock }}.lock
+      -x /tmp/{{ pull_pb_lock }}.lock
+      -w 59
       /usr/local/bin/ansible-pull -i localhost
       --checkout={{ pull_pb_branch }}
       --url={{ pull_pb_repo }}
