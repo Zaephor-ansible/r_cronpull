@@ -28,11 +28,14 @@
       --directory={{ pull_pb_path }}
       --accept-host-key
       --clean
-      {% if pull_only_if_changed %}
+      {% if pull_only_if_changed -%}
       --only-if-changed
       {% endif %}
-      {% if pull_pb_deploykey | default(false) %}
+      {% if pull_pb_deploykey | default(false) -%}
       --private-key={{ pull_pb_deploykey }}
+      {% endif %}
+      {% if pull_pb_yml | default(false) -%}
+      {{ pull_pb_yml }}
       {% endif %}
       >> {{ pull_pb_logfile }}
 
