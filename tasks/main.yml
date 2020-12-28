@@ -21,7 +21,7 @@
     regexp: "^.*--checkout={{ pull_pb_branch }} --url={{ pull_pb_repo }}.*$"
     line: >-
       {{ pull_pb_cron }} {{ pull_pb_owner }} /usr/bin/flock
-      -x -w 59 /tmp/{{ pull_pb_lock }}.lock
+      -x -w 300 /tmp/{{ pull_pb_lock }}.lock
       /usr/local/bin/ansible-pull -i localhost
       --checkout={{ pull_pb_branch }}
       --url={{ pull_pb_repo }}
@@ -30,13 +30,13 @@
       --clean
       {% if pull_only_if_changed -%}
       --only-if-changed
-      {% endif %}
+      {%- endif %}
       {% if pull_pb_deploykey | default(false) -%}
       --private-key={{ pull_pb_deploykey }}
-      {% endif %}
+      {%- endif %}
       {% if pull_pb_yml | default(false) -%}
       {{ pull_pb_yml }}
-      {% endif %}
+      {%- endif %}
       >> {{ pull_pb_logfile }}
 
 - name: Add to logrotate
