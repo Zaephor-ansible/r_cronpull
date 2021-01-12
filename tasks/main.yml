@@ -11,6 +11,18 @@
   - { path: "{{ pull_pb_path }}", owner: "{{ pull_pb_owner }}", group: "{{ pull_pb_group }}", mode: "{{ pull_pb_mode }}" }
   - { path: "{{ pull_pb_logfile|dirname }}", owner: 'root', group: 'root', mode: '0755' }
 
+- name: Broaden cron'd PATH scope
+  lineinfile:
+    path: "/etc/cron.d/{{ pull_pb_lock }}"
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+    create: 'yes'
+    insertbefore: BOF
+    regexp: "^PATH=.*"
+    line: "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
+
+
 - name: Add to cron
   lineinfile:
     path: "/etc/cron.d/{{ pull_pb_lock }}"
