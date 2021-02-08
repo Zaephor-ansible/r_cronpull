@@ -1,6 +1,7 @@
 ---
 # tasks file for r_cronpull
 - name: Ensure retention folder exists
+  become: yes
   file:
     path: "{{ item.path }}"
     state: directory
@@ -12,6 +13,7 @@
   - { path: "{{ pull_pb_logfile|dirname }}", owner: 'root', group: 'root', mode: '0755' }
 
 - name: Broaden cron'd PATH scope
+  become: yes
   lineinfile:
     path: "/etc/cron.d/{{ pull_pb_lock }}"
     owner: 'root'
@@ -24,6 +26,7 @@
 
 
 - name: Add to cron
+  become: yes
   lineinfile:
     path: "/etc/cron.d/{{ pull_pb_lock }}"
     owner: 'root'
@@ -52,6 +55,7 @@
       >> {{ pull_pb_logfile }}
 
 - name: Add to logrotate
+  become: yes
   template:
     src: templates/etc_logrotate.d_cronpull.j2
     dest: "/etc/logrotate.d/{{ pull_pb_name }}"
