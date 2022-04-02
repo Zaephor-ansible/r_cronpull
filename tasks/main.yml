@@ -2,7 +2,7 @@
 # tasks file for r_cronpull
 - name: Ensure retention folder exists
   become: yes
-  file:
+  ansible.builtin.file:
     path: "{{ item.path }}"
     state: directory
     owner: "{{ item.owner }}"
@@ -14,7 +14,7 @@
 
 - name: Broaden cron'd PATH scope
   become: yes
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: "/etc/cron.d/{{ pull_pb_lock }}"
     owner: 'root'
     group: 'root'
@@ -27,7 +27,7 @@
 
 - name: Add to cron
   become: yes
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: "/etc/cron.d/{{ pull_pb_lock }}"
     owner: 'root'
     group: 'root'
@@ -56,7 +56,7 @@
 
 - name: Add to logrotate
   become: yes
-  template:
+  ansible.builtin.template:
     src: templates/etc_logrotate.d_cronpull.j2
     dest: "/etc/logrotate.d/{{ pull_pb_name }}"
     owner: 'root'
